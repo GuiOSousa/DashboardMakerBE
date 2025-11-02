@@ -13,12 +13,16 @@ export default class MongoDashboardService implements IDashboardService {
     }
 
     async getAll(filters: any): Promise<any> {
-        const updatedFilters: any = {}
+        try {
+            const updatedFilters: any = {}
 
-        typeof(filters.id) === "string" ? updatedFilters["_id"] = new ObjectId(filters.id) : undefined
-        filters.title ? updatedFilters["data.title"] = { $regex: filters.title, $options: "i" } : undefined
+            filters.id ? updatedFilters["_id"] = new ObjectId(filters.id) : undefined
+            filters.title ? updatedFilters["data.title"] = { $regex: filters.title, $options: "i" } : undefined
 
-        return await this.repository.getAll(updatedFilters)
+            return await this.repository.getAll(updatedFilters)
+        } catch(err) {
+            return []
+        }
     }
 
     async getById(id: string): Promise<any> {
