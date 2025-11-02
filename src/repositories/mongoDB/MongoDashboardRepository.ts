@@ -10,15 +10,14 @@ export default class MongoDashboardRepository implements IDashboardRepository {
         return client.collection('dashboards');
     }
 
-    async getAll(): Promise<any> {
+    async getAll(filters: any): Promise<any> {
         const collection = await this.getCollection()
-        return await collection.find().toArray()
+        return await collection.find(filters).toArray()
     }
 
-    async getById(id: string): Promise<any> {
-        const dashboardId = new ObjectId(id)
+    async getById(id: ObjectId): Promise<any> {
         const collection = await this.getCollection()
-        return await collection.findOne({ _id: dashboardId })
+        return await collection.findOne({ _id: id })
     }
     
     async create(data: any): Promise<any> {
@@ -26,13 +25,13 @@ export default class MongoDashboardRepository implements IDashboardRepository {
         return await collection.insertOne(data)
     }
     
-    async update(id: string, data: any): Promise<any> {
-        const dashboardId = new ObjectId(id)
+    async update(id: ObjectId, data: any): Promise<any> {
         const collection = await this.getCollection()
-        return await collection.updateOne({_id: dashboardId}, { $set: data })
+        return await collection.updateOne({_id: id}, { $set: data })
     }
 
-    delete(id: string): Promise<any> {
-        throw new Error("Method not implemented.");
+    async delete(id: ObjectId): Promise<any> {
+        const collection = await this.getCollection()
+        return await collection.deleteOne({_id: id})
     }
 }

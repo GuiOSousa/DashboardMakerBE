@@ -1,7 +1,9 @@
+import { ObjectId } from "mongodb"
+
 export default interface IDashboardRepository {
-    getAll(): Promise<any>
-    getById(id: string): Promise<any>
+    getAll(filters: any): Promise<any>
+    getById(id: ObjectId): Promise<any>
     create(data: any): Promise<any>
-    update(id:string, data: any): Promise<any>
-    delete(id: string): Promise<any>
+    update(id: ObjectId, data: any): Promise<any>
+    delete(id: ObjectId): Promise<any>
 }

@@ -5,7 +5,7 @@ export default interface IDashboardService {
     environment: IEnvironment
     repository: IDashboardRepository
 
-    getAll(): Promise<any>
+    getAll(filters: any): Promise<any>
     getById(id: string): Promise<any>
     create(data: any): Promise<any>
     update(data: any): Promise<any>

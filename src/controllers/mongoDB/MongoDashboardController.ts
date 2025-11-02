@@ -2,7 +2,6 @@ import type { Request, Response } from 'express';
 import IEnvironment from "../../environment/IEnvironment";
 import IDashboardService from "../../services/IDashboardService";
 import IDashboardController from "../IDashboardController";
-import { stringify } from 'querystring';
 
 export default class MongoDashboardController implements IDashboardController {
     environment: IEnvironment;
@@ -15,14 +14,7 @@ export default class MongoDashboardController implements IDashboardController {
 
     async get(req: Request, res: Response): Promise<any> {
 	    try {
-            const { id } = req.query;
-
-            if (id && typeof id === "string") {
-                const data = await this.service.getById(id);
-                return res.status(201).json(data);
-            }
-
-            const data = await this.service.getAll();
+            const data = await this.service.getAll(req.query);
             return res.status(201).json(data);
 	    } catch (err) {
 		    return res.status(400).json(err);
@@ -41,13 +33,19 @@ export default class MongoDashboardController implements IDashboardController {
     async update(req: Request, res: Response): Promise<any> {
         try {
             const result = await this.service.update(req.body)
-            return res.status(201).json(result)
+            return res.status(200).json(result)
         } catch (err) {
             return res.status(400).json(err)
         }
     }
 
-    delete(req: Request, res: Response): Promise<any> {
-        throw new Error("Method not implemented.");
+    async delete(req: Request, res: Response): Promise<any> {
+        try {
+            const id = String(req.params.id)
+            const result = await this.service.delete(id)
+            return res.status(200).json(result)
+        } catch (err) {
+            return res.status(400).json(err)
+        }
     }
 }

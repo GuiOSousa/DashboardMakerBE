@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import IEnvironment from "../../environment/IEnvironment";
 import IDashboardRepository from "../../repositories/IDashboardRepository";
 import IDashboardService from "../IDashboardService";
@@ -11,12 +12,17 @@ export default class MongoDashboardService implements IDashboardService {
         this.repository = this.environment.dashboardRepository
     }
 
-    async getAll(): Promise<any> {
-        return await this.repository.getAll()
+    async getAll(filters: any): Promise<any> {
+        if (typeof(filters.id) === "string") {
+            return this.getById(filters.id)
+        }
+
+        return await this.repository.getAll(filters)
     }
 
     async getById(id: string): Promise<any> {
-        return await this.repository.getById(id)
+        const dashboardId = new ObjectId(id)
+        return await this.repository.getById(dashboardId)
     }
 
     async create(data: any): Promise<any> {
@@ -35,7 +41,8 @@ export default class MongoDashboardService implements IDashboardService {
         return await this.repository.update(id, data)
     }
 
-    delete(id: string): Promise<any> {
-        throw new Error("Method not implemented.");
+    async delete(id: string): Promise<any> {
+        const dashboardId = new ObjectId(id)
+        return await this.repository.delete(dashboardId)
     }
 }
