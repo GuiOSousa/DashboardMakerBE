@@ -14,7 +14,7 @@ export default class MongoDashboardService implements IDashboardService {
 
     async getAll(filters: any): Promise<any> {
         if (typeof(filters.id) === "string") {
-            return this.getById(filters.id)
+            return await this.getById(filters.id)
         }
 
         return await this.repository.getAll(filters)
